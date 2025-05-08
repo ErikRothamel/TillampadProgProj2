@@ -18,7 +18,10 @@ double I = 0;
 double prevEv;
 
 float filteredDistance = 0;
-float alpha = 0.1; // Justerbar lågpassfilterfaktor
+float alpha = 0.1;
+
+double I_max = 100;
+double I_min = -100;
 
 
 void setup() {
@@ -77,7 +80,7 @@ float servoMove(){
 
 float getDistance() {
   if (lox.isRangeComplete()) {
-    float raw = map(lox.readRange(), 0, 200, -100, 100);
+    float raw = map(lox.readRange(), 30, 230, -100, 100);
     filteredDistance = alpha * raw + (1 - alpha) * filteredDistance;
   }
   return filteredDistance;
@@ -91,6 +94,7 @@ float pidFunc() {
   double D;
   double evHold;
   I = I + ev;
+  I = constrain(I, I_min, I_max);
   D = ev;
   
   double evDiff;
